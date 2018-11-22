@@ -111,15 +111,15 @@ var serverDetails="http://localhost:8080/news/rest/";
     function uploadFileToUrl(file) {
       var fd = new FormData();
       fd.append('file', file);
-      $http({
+      /* $http({
         method: 'POST',
-        url: serverDetails+'image/uploadimage/',
-      data: fd,
-      enabled: false,
-      headers:{
-        'Content-Type':'multipart/form-data;boundary=------------------------d74496d66958873e'
-      }
-       }).then(function (response) {
+        url: serverDetails + 'image/uploadimage/43243242',
+		data: fd,
+		transformRequest : angular.identity,
+		headers : { 'Content-Type' :  'multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW'},
+		transformRequest : angular.identity
+		//mimeType : 'multipart/form-data'
+      }).then(function (response) {
         //  console.log(response);
         if(response.status == 200 || response.status == 201 ||response.status == 202){
           window.location.href = "login.html";
@@ -136,9 +136,27 @@ var serverDetails="http://localhost:8080/news/rest/";
            
           }
       
-      });
+      }); */
+	  
+	   $http.post(serverDetails + 'image/uploadimage/43243242', fd,{
+                    transformRequest : angular.identity,
+                    headers : {
+                        'Content-Type' : undefined
+                    }})
+                    .then(
+                        function (response) {
+                            if(response.status == 200 || response.status == 201 ||response.status == 202){
+          window.location.href = "login.html";
+         }
+                        },
+                        function (errResponse) {
+                            alert(errResponse.data.errorMessage);
+                            deferred.reject(errResponse);
+                        }
+                    );
+                return deferred.promise;
     }
-
+$scope.file = '';
     $scope.uploadFile = function(){
       var file =  document.getElementById('file').files[0];
       console.dir(file);
